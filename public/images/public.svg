@@ -1,0 +1,25 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Background -->
+<rect width="100" height="100" fill="#87CEEB"/>
+<!-- Ground -->
+<rect x="0" y="80" width="100" height="20" fill="#90EE90"/>
+<!-- House -->
+<rect x="30" y="50" width="40" height="30" fill="#DEB887"/>
+<path d="M25 50 L50 35 L75 50 Z" fill="#8B4513"/>
+<!-- Door -->
+<rect x="45" y="60" width="10" height="20" fill="#8B4513"/>
+<!-- Windows -->
+<rect x="35" y="55" width="8" height="8" fill="#87CEEB"/>
+<rect x="57" y="55" width="8" height="8" fill="#87CEEB"/>
+<!-- Phone Tower -->
+<rect x="80" y="40" width="4" height="40" fill="#696969"/>
+<rect x="75" y="45" width="14" height="3" fill="#FF6347"/>
+<rect x="75" y="50" width="14" height="3" fill="#FF6347"/>
+<!-- Phone -->
+<rect x="60" y="70" width="8" height="12" fill="#2F4F4F" rx="2"/>
+<rect x="61" y="72" width="6" height="8" fill="#000000"/>
+<!-- Aurora -->
+<path d="M10 20 Q30 10 50 15 Q70 5 90 12" stroke="#FF69B4" stroke-width="3" fill="none" opacity="0.7"/>
+<path d="M5 25 Q25 18 45 22 Q65 16 95 20" stroke="#9370DB" stroke-width="3" fill="none" opacity="0.7"/>
+<path d="M15 30 Q35 25 55 28 Q75 22 85 25" stroke="#00BFFF" stroke-width="3" fill="none" opacity="0.7"/>
+</svg>

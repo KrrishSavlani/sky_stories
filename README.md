@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌟 SkyStories
 
-## Getting Started
+A kid-friendly digital story app where children can experience stories about **space weather** told from the perspectives of different characters (farmer, pilot, astronaut, power grid operator, general public).
 
-First, run the development server:
+## ✨ Features
 
+- **Interactive Storytelling**: Call-based UI where characters appear one at a time
+- **Multiple Perspectives**: Hear from 5 different characters about space weather
+- **Cosmic Theme**: Beautiful aurora backgrounds and space aesthetics
+- **Smooth Animations**: Powered by Framer Motion for engaging transitions
+- **Responsive Design**: Works on desktop and mobile devices
+- **Modern Tech Stack**: Built with Next.js 14, React, TailwindCSS, and Framer Motion
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd skystories
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+├── components/
+│   ├── AuroraBackground.tsx    # Animated cosmic background
+│   ├── CharacterCard.tsx       # Individual character display
+│   ├── CallUI.tsx             # Main story interface
+│   └── Navbar.tsx             # Navigation header
+├── story/
+│   └── page.tsx               # Story page
+├── end/
+│   └── page.tsx               # End page
+├── utils/
+│   └── aiPlaceholders.ts      # AI integration placeholders
+├── globals.css                # Global styles and animations
+├── layout.tsx                 # Root layout
+└── page.tsx                   # Landing page
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+public/
+└── images/
+    ├── farmer.svg             # Character avatars
+    ├── pilot.svg
+    ├── astronaut.svg
+    ├── operator.svg
+    └── public.svg
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎨 Design System
 
-## Deploy on Vercel
+### Colors
+- **Cosmic Purple**: `#8b5cf6`
+- **Cosmic Pink**: `#ec4899` 
+- **Cosmic Blue**: `#3b82f6`
+- **Cosmic Green**: `#10b981`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Typography
+- **Font**: Poppins (Google Fonts)
+- **Weights**: 300, 400, 500, 600, 700, 800
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Animations
+- **Aurora Background**: Slow-moving gradient animation
+- **Character Entry**: Slide and fade transitions
+- **Hover Effects**: Scale and glow animations
+- **Floating Elements**: Subtle movement patterns
+
+## 🧩 Characters
+
+1. **👩‍🌾 Farmer Sarah** - GPS and agricultural impacts
+2. **👨‍✈️ Captain Mike** - Aviation and navigation
+3. **👩‍🚀 Commander Alex** - Space perspective and astronaut safety
+4. **⚡ Grid Operator Lisa** - Power grid and electrical systems
+5. **🙂 Community Member** - General public and everyday impacts
+
+## 🔮 Future Enhancements
+
+- **AI Integration**: Replace placeholder functions with real AI text and image generation
+- **Sound Effects**: Add audio for character interactions
+- **More Characters**: Expand the story with additional perspectives
+- **Interactive Elements**: Add clickable elements and mini-games
+- **Progress Tracking**: Save user progress and preferences
+- **Multi-language Support**: Translate stories to different languages
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **UI Library**: React 19
+- **Styling**: TailwindCSS 4
+- **Animations**: Framer Motion 11
+- **Fonts**: Google Fonts (Poppins)
+- **TypeScript**: Full type safety
+
+## 📱 Responsive Design
+
+The app is fully responsive and works on:
+- Desktop (1024px+)
+- Tablet (768px - 1023px)
+- Mobile (320px - 767px)
+
+## 🎯 Educational Goals
+
+This app helps children learn about:
+- Space weather and solar activity
+- How technology is affected by space weather
+- Different career perspectives on space science
+- The interconnectedness of our world
+- Scientific concepts in an engaging way
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+Built with ❤️ for space weather education and storytelling.

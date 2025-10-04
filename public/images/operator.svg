@@ -1,0 +1,23 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Background -->
+<rect width="100" height="100" fill="#2C3E50"/>
+<!-- Power Grid Tower -->
+<rect x="45" y="20" width="10" height="60" fill="#34495E"/>
+<rect x="40" y="25" width="20" height="4" fill="#E74C3C"/>
+<rect x="40" y="35" width="20" height="4" fill="#E74C3C"/>
+<rect x="40" y="45" width="20" height="4" fill="#E74C3C"/>
+<!-- Power Lines -->
+<path d="M10 30 L90 30" stroke="#95A5A6" stroke-width="2"/>
+<path d="M10 40 L90 40" stroke="#95A5A6" stroke-width="2"/>
+<path d="M10 50 L90 50" stroke="#95A5A6" stroke-width="2"/>
+<!-- Control Panel -->
+<rect x="20" y="70" width="60" height="20" fill="#34495E" rx="3"/>
+<rect x="25" y="75" width="8" height="8" fill="#E74C3C" rx="1"/>
+<rect x="35" y="75" width="8" height="8" fill="#27AE60" rx="1"/>
+<rect x="45" y="75" width="8" height="8" fill="#F39C12" rx="1"/>
+<rect x="55" y="75" width="8" height="8" fill="#E74C3C" rx="1"/>
+<rect x="65" y="75" width="8" height="8" fill="#27AE60" rx="1"/>
+<!-- Lightning/Electricity -->
+<path d="M30 15 L35 25 L32 25 L37 35" stroke="#FFD700" stroke-width="2" fill="none"/>
+<path d="M60 20 L65 30 L62 30 L67 40" stroke="#FFD700" stroke-width="2" fill="none"/>
+</svg>
