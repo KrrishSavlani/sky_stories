@@ -10,7 +10,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "🌟 SkyStories",
-  description: "Adventures of the Sun and Space Weather - A kid-friendly digital story app",
+  description:
+    "Adventures of the Sun and Space Weather - A kid-friendly digital story app",
 };
 
 export default function RootLayout({
@@ -20,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} font-sans antialiased`}
-      >
+      <body className={`${poppins.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

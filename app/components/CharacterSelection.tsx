@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Character {
   id: string;
@@ -18,48 +18,35 @@ interface CharacterSelectionProps {
 
 const characters: Character[] = [
   {
-    id: 'farmer',
-    name: 'Farmer',
-    emoji: '🌾',
-    avatar: '/images/farmer.svg',
-    description: 'Learn how space weather affects agriculture and GPS farming',
-    color: 'bg-gradient-to-br from-amber-600 to-orange-700'
+    id: "astronaut",
+    name: "👩‍🚀 Commander Alex",
+    emoji: "🚀",
+    avatar: "/images/astronaut.svg",
+    description: "Experience space weather from an astronaut's perspective",
+    color: "bg-gradient-to-br from-purple-600 to-violet-700",
   },
   {
-    id: 'pilot',
-    name: '👨‍✈️ Captain Mike',
-    emoji: '✈️',
-    avatar: '/images/pilot.svg',
-    description: 'Discover aviation challenges during solar storms',
-    color: 'bg-gradient-to-br from-blue-600 to-indigo-700'
+    id: "farmer",
+    name: "Farmer",
+    emoji: "🌾",
+    avatar: "/images/farmer.svg",
+    description: "Learn how space weather affects agriculture and GPS farming",
+    color: "bg-gradient-to-br from-amber-600 to-orange-700",
   },
   {
-    id: 'astronaut',
-    name: '👩‍🚀 Commander Alex',
-    emoji: '🚀',
-    avatar: '/images/astronaut.svg',
-    description: 'Experience space weather from an astronaut\'s perspective',
-    color: 'bg-gradient-to-br from-purple-600 to-violet-700'
+    id: "solarflare",
+    name: "🌞 Solar Flare",
+    emoji: "🔥",
+    avatar: "/images/solarflare.svg",
+    description:
+      "See Earth through the eyes of a solar flare racing across space",
+    color: "bg-gradient-to-br from-red-600 to-yellow-600",
   },
-  {
-    id: 'operator',
-    name: '⚡ Grid Operator Lisa',
-    emoji: '⚡',
-    avatar: '/images/operator.svg',
-    description: 'Understand power grid protection during space weather',
-    color: 'bg-gradient-to-br from-red-600 to-pink-700'
-  },
-  {
-    id: 'public',
-    name: '🙂 Community Member',
-    emoji: '🌟',
-    avatar: '/images/public.svg',
-    description: 'See how space weather impacts daily life',
-    color: 'bg-gradient-to-br from-emerald-600 to-teal-700'
-  }
 ];
 
-export default function CharacterSelection({ onSelectCharacter }: CharacterSelectionProps) {
+export default function CharacterSelection({
+  onSelectCharacter,
+}: CharacterSelectionProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 pt-24">
       {/* Header */}
@@ -73,7 +60,8 @@ export default function CharacterSelection({ onSelectCharacter }: CharacterSelec
           🌟 Choose Your Perspective 🌟
         </h1>
         <p className="text-xl text-white/80 max-w-2xl mx-auto">
-          Select a character to hear their unique story about space weather and how it affects their world
+          Select a character to hear their unique story about space weather and
+          how it affects their world
         </p>
       </motion.div>
 
@@ -111,23 +99,23 @@ export default function CharacterSelection({ onSelectCharacter }: CharacterSelec
                   {character.emoji}
                 </div>
               </div>
-              
+
               {/* Character Name */}
               <h3 className="text-xl font-bold text-white mb-2 drop-shadow-md">
                 {character.name}
               </h3>
-              
+
               {/* Description */}
               <p className="text-white/95 text-sm leading-relaxed mb-4 drop-shadow-sm">
                 {character.description}
               </p>
-              
+
               {/* Select Button */}
               <motion.div
                 className="px-6 py-3 bg-white/25 backdrop-blur-sm rounded-full text-white font-semibold text-sm shadow-lg border border-white/30"
-                whileHover={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                  scale: 1.05
+                whileHover={{
+                  backgroundColor: "rgba(255, 255, 255, 0.4)",
+                  scale: 1.05,
                 }}
                 transition={{ duration: 0.2 }}
               >

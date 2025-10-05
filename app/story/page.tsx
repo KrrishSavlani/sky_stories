@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import AuroraBackground from '../components/AuroraBackground';
-import Navbar from '../components/Navbar';
-import CharacterSelection from '../components/CharacterSelection';
-import ChatUI from '../components/ChatUI';
+import { useState } from "react";
+import AuroraBackground from "../components/AuroraBackground";
+import CharacterSelection from "../components/CharacterSelection";
+import ChatUI from "../components/ChatUI_elevenlabs";
 
 interface Character {
   id: string;
@@ -15,23 +14,27 @@ interface Character {
 }
 
 export default function StoryPage() {
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-  const [currentStep, setCurrentStep] = useState<'selection' | 'chat'>('selection');
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
+    null
+  );
+  const [currentStep, setCurrentStep] = useState<"selection" | "chat">(
+    "selection"
+  );
 
   const handleSelectCharacter = (character: Character) => {
     setSelectedCharacter(character);
-    setCurrentStep('chat');
+    setCurrentStep("chat");
   };
 
   const handleBackToSelection = () => {
-    setCurrentStep('selection');
+    setCurrentStep("selection");
     setSelectedCharacter(null);
   };
 
   return (
     <AuroraBackground>
       {/*<Navbar currentPage="story" />*/}
-      {currentStep === 'selection' ? (
+      {currentStep === "selection" ? (
         <CharacterSelection onSelectCharacter={handleSelectCharacter} />
       ) : (
         selectedCharacter && (

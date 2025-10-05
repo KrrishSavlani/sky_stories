@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, memo } from "react";
 import { useConversation } from "@elevenlabs/react";
 import VoiceInteractionAnimation from "./VoiceInteractionAnimation";
 
@@ -24,6 +24,67 @@ interface TranscriptEntry {
   timestamp: Date;
 }
 
+// Memoized Transcript Section Component
+const TranscriptSection = memo(
+  ({
+    transcript,
+    character,
+    transcriptEndRef,
+  }: {
+    transcript: TranscriptEntry[];
+    character: Character;
+    transcriptEndRef: React.RefObject<HTMLDivElement | null>;
+  }) => (
+    <div className="w-96">
+      <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/10 h-full flex flex-col">
+        <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          📝 Conversation Transcript
+        </h3>
+
+        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar max-h-[calc(100vh-200px)]">
+          {transcript.length === 0 ? (
+            <div className="text-white/50 text-center py-8">
+              <p>
+                No conversation yet. Start talking to see the transcript here.
+              </p>
+            </div>
+          ) : (
+            transcript.map((entry) => (
+              <motion.div
+                key={entry.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`p-3 rounded-lg ${
+                  entry.speaker === "user"
+                    ? "bg-blue-500/20 border-l-4 border-blue-400 ml-4"
+                    : "bg-green-500/20 border-l-4 border-green-400 mr-4"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-medium text-white/80">
+                    {entry.speaker === "user"
+                      ? "👤 You"
+                      : `${character.emoji} ${character.name}`}
+                  </span>
+                  <span className="text-xs text-white/50">
+                    {entry.timestamp.toLocaleTimeString()}
+                  </span>
+                </div>
+                <p className="text-white/90 text-sm leading-relaxed">
+                  {entry.text}
+                </p>
+              </motion.div>
+            ))
+          )}
+          <div ref={transcriptEndRef} />
+        </div>
+      </div>
+    </div>
+  )
+);
+
+TranscriptSection.displayName = "TranscriptSection";
+
 // Character context for ElevenLabs AI
 const getCharacterContext = (character: Character) => {
   const contexts = {
@@ -36,6 +97,7 @@ const getCharacterContext = (character: Character) => {
         "Space missions, EVA operations, spacecraft systems, space psychology, and international space cooperation",
       speakingStyle:
         "Professional yet personable, uses technical terms when appropriate but explains them clearly",
+      instructions: `You are ${character.name}, an experienced astronaut. Always respond as this character would, drawing from your extensive space experience. Share specific details about life in space, the challenges of space missions, and the wonder of seeing Earth from orbit.`,
     },
     farmer: {
       personality:
@@ -46,6 +108,7 @@ const getCharacterContext = (character: Character) => {
         "Crop management, soil health, agricultural technology, sustainable farming, climate adaptation in agriculture",
       speakingStyle:
         "Down-to-earth, practical, uses farming analogies and speaks from hands-on experience",
+      instructions: `You are ${character.name}, an experienced farmer and agricultural expert. Always respond as this character would, sharing practical farming wisdom, seasonal insights, and your passion for sustainable agriculture. Use farming analogies and speak from decades of hands-on experience.`,
     },
     operator: {
       personality:
@@ -56,6 +119,7 @@ const getCharacterContext = (character: Character) => {
         "Mission control operations, spacecraft telemetry, emergency procedures, communication protocols, flight dynamics",
       speakingStyle:
         "Precise, methodical, uses clear communication protocols, remains calm and focused",
+      instructions: `You are ${character.name}, a mission control operator with 15 years of experience. Always respond as this character would, with precision and calm professionalism. Share insights about spacecraft operations, emergency procedures, and the critical work of mission control.`,
     },
     pilot: {
       personality:
@@ -66,6 +130,7 @@ const getCharacterContext = (character: Character) => {
         "Flight operations, aircraft systems, aerodynamics, flight safety, pilot training, aerospace testing",
       speakingStyle:
         "Confident and precise, uses aviation terminology, emphasizes safety and proper procedures",
+      instructions: `You are ${character.name}, an experienced test pilot and flight instructor. Always respond as this character would, with confidence and precision. Share stories from your flying experience, emphasize safety protocols, and explain complex aviation concepts clearly.`,
     },
     public: {
       personality:
@@ -76,6 +141,7 @@ const getCharacterContext = (character: Character) => {
         "Space science communication, educational programs, public engagement, space history, future missions",
       speakingStyle:
         "Enthusiastic and accessible, uses analogies and examples that everyone can understand",
+      instructions: `You are ${character.name}, a space science communicator and educator. Always respond as this character would, with enthusiasm and in an accessible way. Make complex space topics easy to understand, use engaging analogies, and inspire curiosity about space exploration.`,
     },
   };
 
@@ -84,8 +150,7 @@ const getCharacterContext = (character: Character) => {
 
 export default function ChatUI({ character, onBack }: ChatUIProps) {
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
-  const [currentUserText, setCurrentUserText] = useState("");
-  const [currentAgentText, setCurrentAgentText] = useState("");
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   // Get character context for the AI
@@ -93,53 +158,57 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
 
   // ElevenLabs React SDK - useConversation hook
   const conversation = useConversation({
+    apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
     onConnect: () => {
       console.log("Connected to ElevenLabs");
+      setConnectionError(null);
     },
     onDisconnect: () => {
       console.log("Disconnected from ElevenLabs");
     },
     onMessage: (message) => {
       console.log("Message received:", message);
+      // Handle different message types from ElevenLabs - use the actual API structure
       if (message.source === "user" && message.message) {
         addToTranscript("user", message.message);
-        setCurrentUserText("");
       } else if (message.source === "ai" && message.message) {
         addToTranscript("agent", message.message);
-        setCurrentAgentText("");
       }
     },
     onStatusChange: (status) => {
       console.log("Status changed:", status);
+      if (status.status === "disconnected" && transcript.length > 0) {
+        console.log("Unexpected disconnection detected");
+      }
     },
     onModeChange: (mode) => {
       console.log("Mode changed:", mode);
       // Update UI based on mode (listening, speaking, etc.)
-      if (mode?.mode === "listening") {
-        setCurrentUserText("Listening...");
-      } else if (mode?.mode === "speaking") {
-        setCurrentAgentText("Speaking...");
-      } else {
-        setCurrentUserText("");
-        setCurrentAgentText("");
-      }
+      // Mode changes are now handled by the memoized animationUserType
     },
     onError: (error) => {
       console.error("Conversation error:", error);
+      setConnectionError(
+        typeof error === "string" ? error : "Connection error occurred"
+      );
+      // Don't automatically retry on error to prevent loops
     },
   });
 
-  const addToTranscript = (speaker: "user" | "agent", text: string) => {
-    if (text.trim()) {
-      const entry: TranscriptEntry = {
-        id: Date.now().toString(),
-        speaker,
-        text: text.trim(),
-        timestamp: new Date(),
-      };
-      setTranscript((prev) => [...prev, entry]);
-    }
-  };
+  const addToTranscript = useCallback(
+    (speaker: "user" | "agent", text: string) => {
+      if (text.trim()) {
+        const entry: TranscriptEntry = {
+          id: Date.now().toString(),
+          speaker,
+          text: text.trim(),
+          timestamp: new Date(),
+        };
+        setTranscript((prev) => [...prev, entry]);
+      }
+    },
+    []
+  );
 
   const scrollToBottom = () => {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -149,190 +218,88 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
     scrollToBottom();
   }, [transcript]);
 
-  // Generate AI response using a simple conversation API
-  const generateAIResponse = async (userInput: string): Promise<string> => {
-    const responses = [
-      `As ${character.name}, I find that fascinating! "${userInput}" reminds me of my experiences in space weather phenomena.`,
-      `${character.name} here! That's an interesting observation about "${userInput}". In my field, we often see similar patterns.`,
-      `Great question! As ${character.name}, I can tell you that "${userInput}" relates to some amazing discoveries we've made.`,
-      `You know, "${userInput}" is exactly the kind of thing that got me interested in space science in the first place!`,
-      `That's a wonderful point about "${userInput}". Let me share what ${character.name} would say about that...`,
-    ];
-
-    // Simulate API delay
-    await new Promise((resolve) =>
-      setTimeout(resolve, 1000 + Math.random() * 2000)
-    );
-
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
-
-  // Convert text to speech using browser API or ElevenLabs
-  const speakText = async (text: string) => {
-    try {
-      setIsSpeaking(true);
-
-      // Use browser speech synthesis as fallback
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.volume = 0.8;
-
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => {
-        setIsSpeaking(false);
-        // Resume listening after speaking
-        setTimeout(() => {
-          if (recognitionRef.current && isConnected) {
-            setIsListening(true);
-          }
-        }, 500);
-      };
-
-      speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error("TTS Error:", error);
-      setIsSpeaking(false);
-    }
-  };
-
+  // Start conversation with character context
   const startConversation = async () => {
-    if (
-      !("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)
-    ) {
-      alert(
-        "Speech recognition is not supported in your browser. Please use Chrome or Edge."
-      );
-      return;
-    }
-
-    setIsConnecting(true);
+    setConnectionError(null); // Clear any previous errors
 
     try {
-      // Initialize speech recognition
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
+      // Check if API key is available
+      const apiKey = process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY;
+      const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
+      if (!apiKey) {
+        console.error(
+          "ElevenLabs API key not found. Please set NEXT_PUBLIC_ELEVENLABS_API_KEY in your .env.local file"
+        );
+        alert(
+          "ElevenLabs API key not configured. Please check your environment variables."
+        );
+        return;
+      }
 
-      recognition.onstart = () => {
-        console.log("Speech recognition started");
-        setIsConnected(true);
-        setIsConnecting(false);
-        setIsListening(true);
-      };
+      if (!agentId) {
+        console.error(
+          "ElevenLabs Agent ID not found. Please set NEXT_PUBLIC_ELEVENLABS_AGENT_ID in your .env.local file"
+        );
+        alert(
+          "ElevenLabs Agent ID not configured. Please check your environment variables."
+        );
+        return;
+      }
 
-      recognition.onresult = async (event: SpeechRecognitionEvent) => {
-        let finalTranscript = "";
-        let interimTranscript = "";
+      console.log("Starting conversation with agent:", agentId);
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
-          }
-        }
+      // Start the conversation with the ElevenLabs agent and character-specific configuration
+      await conversation.startSession({
+        agentId: agentId,
+        connectionType: "websocket" as const,
+      });
 
-        if (interimTranscript) {
-          setCurrentUserText(interimTranscript);
-        }
+      // Wait a moment for connection to stabilize before sending context
 
-        if (finalTranscript) {
-          setCurrentUserText("");
-          setIsListening(false);
-
-          // Add user message to transcript
-          addToTranscript("user", finalTranscript);
-
-          // Generate and speak AI response
-          try {
-            setCurrentAgentText("Thinking...");
-            const aiResponse = await generateAIResponse(finalTranscript);
-            setCurrentAgentText(aiResponse);
-
-            // Add AI response to transcript
-            addToTranscript("agent", aiResponse);
-            setCurrentAgentText("");
-
-            // Speak the response
-            await speakText(aiResponse);
-          } catch (error) {
-            console.error("Error generating AI response:", error);
-            setCurrentAgentText("");
-          }
-        }
-      };
-
-      recognition.onerror = (event: SpeechRecognitionError) => {
-        console.error("Speech recognition error:", event.error);
-        if (event.error === "no-speech") {
-          // Resume listening if no speech detected
-          setTimeout(() => {
-            if (recognitionRef.current && isConnected) {
-              try {
-                recognition.start();
-              } catch (e) {
-                console.log("Recognition restart failed:", e);
-              }
-            }
-          }, 1000);
-        }
-      };
-
-      recognition.onend = () => {
-        console.log("Speech recognition ended");
-        if (isConnected && !isSpeaking) {
-          // Restart recognition to keep it continuous
-          setTimeout(() => {
-            try {
-              recognition.start();
-              setIsListening(true);
-            } catch {
-              console.log("Recognition already running");
-            }
-          }, 100);
-        }
-      };
-
-      recognitionRef.current = recognition;
-      recognition.start();
+      if (conversation.status === "connected") {
+        // Send contextual update to ensure character awareness
+        conversation.sendContextualUpdate(
+          `You are ${character.name}. ${characterContext.instructions}`
+        );
+      }
     } catch (error) {
       console.error("Failed to start conversation:", error);
-      setIsConnecting(false);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      setConnectionError(errorMessage);
+      alert(`Failed to start conversation: ${errorMessage}`);
     }
   };
 
   const endConversation = async () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
+    try {
+      await conversation.endSession();
+    } catch (error) {
+      console.error("Failed to end conversation:", error);
     }
-
-    // Stop any ongoing speech
-    speechSynthesis.cancel();
-
-    setIsConnected(false);
-    setIsSpeaking(false);
-    setIsListening(false);
-    setCurrentUserText("");
-    setCurrentAgentText("");
   };
 
+  // Get conversation status
+  const isConnected = conversation.status === "connected";
+  const isConnecting = conversation.status === "connecting";
+  const isSpeaking = conversation.isSpeaking;
+  // Note: isListening property doesn't exist in the SDK, we'll use micMuted status instead
+  const isListening = isConnected && !conversation.micMuted;
+
+  // Memoize the animation userType to prevent unnecessary re-renders
+  const animationUserType = useMemo(() => {
+    if (isSpeaking) return "agent";
+    if (isListening) return "user";
+    return "idle";
+  }, [isSpeaking, isListening]);
+
+  // Monitor connection status and handle unexpected disconnections
   useEffect(() => {
-    return () => {
-      // Cleanup on unmount
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-      speechSynthesis.cancel();
-    };
-  }, []);
+    if (conversation.status === "disconnected" && transcript.length > 0) {
+      console.log("Conversation disconnected unexpectedly");
+    }
+  }, [conversation.status, transcript.length]);
 
   return (
     <div className="min-h-screen flex flex-col p-6 relative">
@@ -361,8 +328,12 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
               ? "⏳ Connecting..."
               : "❌ Disconnected"}
           </div>
-        </div>
-
+          {connectionError && (
+            <div className="px-3 py-1 rounded-full text-sm font-medium bg-red-500/20 text-red-300 max-w-xs truncate">
+              ⚠️ {connectionError}
+            </div>
+          )}
+        </div>{" "}
         <div className="flex gap-3">
           {!isConnected ? (
             <motion.button
@@ -406,14 +377,12 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
         <div className="flex-1">
           <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10 h-full relative overflow-hidden">
             <div className="absolute inset-0 z-0 w-full h-full">
-              <VoiceInteractionAnimation
-                userType={isSpeaking ? "agent" : isListening ? "user" : "idle"}
-              />
+              <VoiceInteractionAnimation userType={animationUserType} />
             </div>
 
             {/* Current Speaking Indicator */}
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-              {isListening && (
+              {/* {isListening && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -428,9 +397,9 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
                     </div>
                   )}
                 </motion.div>
-              )}
+              )} */}
 
-              {isSpeaking && (
+              {/* {isSpeaking && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -460,9 +429,9 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
                     {currentAgentText}
                   </div>
                 </motion.div>
-              )}
+              )} */}
 
-              {!isConnected && !isConnecting && (
+              {/* {!isConnected && !isConnecting && (
                 <div className="text-white/60">
                   <div className="text-2xl mb-2">{character.emoji}</div>
                   <p className="text-lg">
@@ -470,59 +439,27 @@ export default function ChatUI({ character, onBack }: ChatUIProps) {
                     {character.name}
                   </p>
                   <p className="text-sm mt-2 text-white/40">
-                    Note: This demo uses browser speech recognition. For best
-                    results, use Chrome or Edge.
+                    Powered by ElevenLabs Conversational AI
                   </p>
+                  <div className="mt-4 p-4 bg-black/20 rounded-lg max-w-md">
+                    <p className="text-xs text-white/60 leading-relaxed">
+                      <strong>Character Context:</strong>
+                      <br />
+                      {characterContext.background}
+                    </p>
+                  </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
 
         {/* Transcript Section */}
-        <div className="w-96">
-          <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/10 h-full flex flex-col">
-            <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              📝 Conversation Transcript
-            </h3>
-
-            <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-              {transcript.length === 0 ? (
-                <div className="text-white/50 text-center py-8">
-                  No conversation yet. Start talking to see the transcript here.
-                </div>
-              ) : (
-                transcript.map((entry) => (
-                  <motion.div
-                    key={entry.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-3 rounded-lg ${
-                      entry.speaker === "user"
-                        ? "bg-blue-500/20 border-l-4 border-blue-400 ml-4"
-                        : "bg-green-500/20 border-l-4 border-green-400 mr-4"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium text-white/80">
-                        {entry.speaker === "user"
-                          ? "👤 You"
-                          : `${character.emoji} ${character.name}`}
-                      </span>
-                      <span className="text-xs text-white/50">
-                        {entry.timestamp.toLocaleTimeString()}
-                      </span>
-                    </div>
-                    <p className="text-white/90 text-sm leading-relaxed">
-                      {entry.text}
-                    </p>
-                  </motion.div>
-                ))
-              )}
-              <div ref={transcriptEndRef} />
-            </div>
-          </div>
-        </div>
+        <TranscriptSection
+          transcript={transcript}
+          character={character}
+          transcriptEndRef={transcriptEndRef}
+        />
       </div>
 
       {/* Custom Scrollbar Styles */}
