@@ -25,7 +25,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            🌟 SkyStories 🌟
+             SkyStories
           </motion.h1>
           
           {/* Subtitle */}
@@ -62,7 +62,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Start the Story 🌞
+                Start the Story
               </motion.button>
             </Link>
           </motion.div>
