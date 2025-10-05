@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AuroraBackground from "../components/AuroraBackground";
 import CharacterSelection from "../components/CharacterSelection";
 import ChatUI from "../components/ChatUI_elevenlabs";
 

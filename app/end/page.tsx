@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import AuroraBackground from '../components/AuroraBackground';
-import Navbar from '../components/Navbar';
 
 export default function EndPage() {
   return (
@@ -42,8 +41,8 @@ export default function EndPage() {
           >
             <p className="text-lg md:text-xl text-white/80 leading-relaxed">
               Through the eyes of farmers, pilots, astronauts, power grid operators, and community members, 
-              we've seen how space weather touches every aspect of our lives. From GPS navigation to power grids, 
-              from beautiful auroras to potential disruptions, the sun's activity shapes our world in countless ways.
+              we&apos;ve seen how space weather touches every aspect of our lives. From GPS navigation to power grids, 
+              from beautiful auroras to potential disruptions, the sun&apos;s activity shapes our world in countless ways.
             </p>
           </motion.div>
           
@@ -63,7 +62,7 @@ export default function EndPage() {
             <div className="bg-gradient-to-r from-blue-500/20 to-green-500/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30">
               <div className="text-3xl mb-3">🔬</div>
               <h3 className="text-xl font-semibold text-white mb-2">Scientific Understanding</h3>
-              <p className="text-white/70">We're learning more about space weather every day</p>
+              <p className="text-white/70">We&apos;re learning more about space weather every day</p>
             </div>
             
             <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm rounded-2xl p-6 border border-orange-500/30">

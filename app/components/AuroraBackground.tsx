@@ -84,6 +84,7 @@ export default function AuroraBackground({ children, className }: AuroraBackgrou
     // Removed mouseX, mouseY as they are no longer used for aurora interaction
     const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
+    console.log("Window size updated:", windowSize);
     useEffect(() => {
         const updateSize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
         updateSize();
