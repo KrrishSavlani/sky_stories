@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 export default function Home() {
   return (
     <AuroraBackground>
-      <Navbar currentPage="home" />
+      {/*<Navbar currentPage="home" />*/}
       
       <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-20">
         {/* Hero Section */}

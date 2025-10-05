@@ -8,7 +8,7 @@ import Navbar from '../components/Navbar';
 export default function EndPage() {
   return (
     <AuroraBackground>
-      <Navbar currentPage="end" />
+      {/*<Navbar currentPage="end" />*/}
       
       <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-20">
         <motion.div
