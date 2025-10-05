@@ -35,8 +35,8 @@ export default function StoryPage() {
         <CharacterSelection onSelectCharacter={handleSelectCharacter} />
       ) : (
         selectedCharacter && (
-          <ChatUI 
-            character={selectedCharacter} 
+          <ChatUI
+            character={selectedCharacter}
             onBack={handleBackToSelection}
           />
         )

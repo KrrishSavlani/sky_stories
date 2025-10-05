@@ -15,8 +15,8 @@ export default function Navbar({ currentPage = 'home' }: NavbarProps) {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="max-w-7xl  px-6 py-4">
+        <div className="flex items-center gap-330">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <motion.div
@@ -24,20 +24,20 @@ export default function Navbar({ currentPage = 'home' }: NavbarProps) {
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.6 }}
             >
-              🌟
+              {/*🌟*/}
             </motion.div>
-            <div>
+              <div className="flex flex-col space-x-14">
               <h1 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">
                 SkyStories
               </h1>
-              <p className="text-xs text-white/60">
-                Space Weather Adventures
-              </p>
+                <p className="text-xs text-white/60">
+                    Space Weather Adventures
+                </p>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className=" items-center space-x-6">
             <Link
               href="/"
               className={`px-4 py-2 rounded-full transition-all duration-300 ${

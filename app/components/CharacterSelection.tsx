@@ -19,7 +19,7 @@ interface CharacterSelectionProps {
 const characters: Character[] = [
   {
     id: 'farmer',
-    name: '👩‍🌾 Farmer Sarah',
+    name: 'Farmer',
     emoji: '🌾',
     avatar: '/images/farmer.svg',
     description: 'Learn how space weather affects agriculture and GPS farming',
