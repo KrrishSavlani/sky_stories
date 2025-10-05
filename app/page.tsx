@@ -47,7 +47,7 @@ export default function Home() {
           >
             Join us on an exciting journey through space weather! Meet farmers, pilots, astronauts, 
             power grid operators, and community members as they share their unique perspectives 
-            on how the sun's activity affects our daily lives.
+            on how the sun&apos;s activity affects our daily lives.
           </motion.p>
           
           {/* CTA Button */}

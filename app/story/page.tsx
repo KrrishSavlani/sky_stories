@@ -32,7 +32,7 @@ export default function StoryPage() {
   };
 
   return (
-    <AuroraBackground>
+    <div>
       {/*<Navbar currentPage="story" />*/}
       {currentStep === "selection" ? (
         <CharacterSelection onSelectCharacter={handleSelectCharacter} />
@@ -44,6 +44,6 @@ export default function StoryPage() {
           />
         )
       )}
-    </AuroraBackground>
+  </div>
   );
 }
